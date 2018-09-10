@@ -11,7 +11,7 @@ module.exports = {
 
 	},
 
-	async getData( dataUrl, start ) {
+    async getData( dataUrl, start ) {
 
 		const _self = this;
 		let data = await _self.fetchData( dataUrl, start );
@@ -34,6 +34,33 @@ module.exports = {
 			});
 
 		return data;
-	}
+	},
+
+    async sendToServer ( url, method, headers, postBody ) {
+        const _self = this;
+        var response = [];
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: postBody,
+                mode: 'cors',
+                credentials: 'include'
+            })
+            return response.json();
+
+        } catch (e) {
+            console.log("Oops, error", e)
+        }
+	},
+
+    postFromServer ( requestParam ) {
+        const _self = this;
+		let url = requestParam['url'] || '';
+        let headers = requestParam['headers'] || '';
+        let postBody = requestParam['postBody'] || '';
+		let response = _self.sendToServer( url, 'POST', headers, postBody );
+		console.log('第三方response === ', response)
+    }
 }
 
