@@ -59,15 +59,48 @@ module.exports = {
         let url = requestParam['url'] || '';
         let headers = requestParam['headers'] || '';
         let postBody = requestParam['postBody'] || '';
+        let code = requestParam['code'] || 200;
         let response = _self.sendToServer( url, 'POST', headers, postBody );
 
         return response.then(function(value) {
             //console.log('第三方 value === ', value)
-            if( value['code'] === 200 ) {
+            if( value['code'] === code ) {
                 return value
             }
         }, function(error) {
             console.log('第三方 error === ', error)
         });
+    },
+    /**
+     * set LocalStorage
+     * @param
+     */
+    setLocalStorage(key,value){
+        var curTime = new Date().getTime();
+        var localStorageJSON = {
+            data:value,
+            time:curTime
+        }
+        localStorage.setItem(key,JSON.stringify(localStorageJSON));
+    },
+    /**
+     * get LocalStorage
+     * @param
+     */
+    getLocalStorage(key,exp){
+        var data = localStorage.getItem(key);
+        var dataObj = JSON.parse(data);
+        if (new Date().getTime() - dataObj.time>exp) {
+            console.log('信息已过期');
+            //alert("信息已过期")
+        }else{
+            //console.log("data="+dataObj.data);
+            //console.log(JSON.parse(dataObj.data));
+
+            console.log("data="+JSON.stringify(dataObj));
+
+            var dataObjDataToJson = dataObj.data
+            return dataObjDataToJson;
+        }
     }
 }
