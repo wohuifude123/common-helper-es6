@@ -60,15 +60,16 @@ module.exports = {
         let headers = requestParam['headers'] || '';
         let postBody = requestParam['postBody'] || '';
         let code = requestParam['code'] || 200;
+        let consoleMessage = requestParam['consoleMessage'] || false;
         let response = _self.sendToServer( url, 'POST', headers, postBody );
 
         return response.then(function(value) {
-            //console.log('第三方 value === ', value)
-            if( value['code'] === code ) {
-                return value
+            if ( consoleMessage === true ) {
+                console.log('common-helper-es6 postFromServer === ', value)
             }
+            return value;
         }, function(error) {
-            console.log('第三方 error === ', error)
+            console.log('postFromServer error === ', error)
         });
     },
     /**
